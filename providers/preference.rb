@@ -43,14 +43,20 @@ action :add do
     action :create
   end
 
-  file "/etc/apt/preferences.d/#{new_resource.name}" do
+  if new_resource.filename.empty?
+    filename = new_resource.name
+  else
+    filename = new_resource.filename
+  end
+
+  file "/etc/apt/preferences.d/#{filename}" do
     action :delete
-    if ::File.exist?("/etc/apt/preferences.d/#{new_resource.name}")
-      Chef::Log.warn "Replacing #{new_resource.name} with #{new_resource.name}.pref in /etc/apt/preferences.d/"
+    if ::File.exist?("/etc/apt/preferences.d/#{filename}")
+      Chef::Log.warn "Replacing #{filename} with #{filename}.pref in /etc/apt/preferences.d/"
     end
   end
 
-  file "/etc/apt/preferences.d/#{new_resource.name}.pref" do
+  file "/etc/apt/preferences.d/#{filename}.pref" do
     owner 'root'
     group 'root'
     mode 00644
@@ -60,9 +66,14 @@ action :add do
 end
 
 action :remove do
-  if ::File.exist?("/etc/apt/preferences.d/#{new_resource.name}.pref")
-    Chef::Log.info "Un-pinning #{new_resource.name} from /etc/apt/preferences.d/"
-    file "/etc/apt/preferences.d/#{new_resource.name}.pref" do
+  if new_resource.filename.empty?
+    filename = new_resource.name
+  else
+    filename = new_resource.filename
+  end
+  if ::File.exist?("/etc/apt/preferences.d/#{filename}.pref")
+    Chef::Log.info "Un-pinning #{filename} from /etc/apt/preferences.d/"
+    file "/etc/apt/preferences.d/#{filename}.pref" do
       action :delete
     end
   end

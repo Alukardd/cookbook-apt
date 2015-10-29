@@ -28,10 +28,12 @@ end
 
 state_attrs :glob,
             :package_name,
+            :filename,
             :pin,
             :pin_priority
 
 attribute :package_name, :kind_of => String, :name_attribute => true
+attribute :filename, :kind_of => String, :default => ""
 attribute :glob, :kind_of => String
 attribute :pin, :kind_of => String
 attribute :pin_priority, :kind_of => [String, Integer]
