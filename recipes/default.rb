@@ -27,6 +27,14 @@ Chef::Log.debug 'apt is not installed. Apt-specific resources will not be execut
 
 first_run_file = File.join(Chef::Config[:file_cache_path], 'apt_compile_time_update_first_run')
 
+directory '/var/lib/apt/periodic' do
+  owner 'root'
+  group 'root'
+  mode 0755
+  only_if { apt_installed? }
+  action :create
+end
+
 file '/var/lib/apt/periodic/update-success-stamp' do
   owner 'root'
   group 'root'
